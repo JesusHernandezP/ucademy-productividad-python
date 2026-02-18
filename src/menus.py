@@ -1,4 +1,5 @@
 from input_utils import pedir_entero_rango
+from task_service import menu_tareas
 
 
 def menu_principal(state: dict):
@@ -14,7 +15,8 @@ def menu_principal(state: dict):
         opcion = pedir_entero_rango("Selecciona una opción (1-6): ", 1, 6)
 
         if opcion == 1:
-            print("Gestión de tareas (pendiente implementar)")
+            menu_tareas(state)
+
         elif opcion == 2:
             print("Gestión de hábitos (pendiente implementar)")
         elif opcion == 3:
