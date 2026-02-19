@@ -17,9 +17,10 @@ def menu_tareas(state: dict):
         print("4. Cambiar estado")
         print("5. Editar tarea")
         print("6. Eliminar tarea")
-        print("7. Volver")
+        print("7. Plan del día")
+        print("8. Volver")
 
-        opcion = pedir_entero_rango("Selecciona una opción (1-7): ", 1, 7)
+        opcion = pedir_entero_rango("Selecciona una opción (1-8): ", 1, 8)
 
         if opcion == 1:
             crear_tarea(state)
@@ -34,6 +35,8 @@ def menu_tareas(state: dict):
         elif opcion == 6:
             eliminar_tarea(state)
         elif opcion == 7:
+            plan_del_dia(state)
+        elif opcion == 8:
             break
 
 def eliminar_tarea(state: dict):
@@ -414,3 +417,56 @@ def cambiar_estado_tarea(state: dict):
     )
 
     print("✅ Estado actualizado correctamente.")
+
+    def plan_del_dia(state: dict):
+        if not state["tareas"]:
+            print("\nNo hay tareas creadas.")
+        return
+
+    hoy = datetime.now().strftime("%Y-%m-%d")
+
+    vencidas = []
+    hoy_lista = []
+    pendientes = []
+    en_progreso = []
+    otras = []
+
+    for t in state["tareas"]:
+        fecha = t["fecha_vencimiento"]
+
+        if fecha and fecha < hoy:
+            vencidas.append(t)
+        elif fecha == hoy:
+            hoy_lista.append(t)
+        elif t["estado"] == "pendiente":
+            pendientes.append(t)
+        elif t["estado"] == "en_progreso":
+            en_progreso.append(t)
+        else:
+            otras.append(t)
+
+    # Ordenar por prioridad descendente
+    pendientes.sort(key=lambda x: x["prioridad"], reverse=True)
+    en_progreso.sort(key=lambda x: x["prioridad"], reverse=True)
+
+    print("\n===== PLAN DEL DÍA =====")
+
+    def imprimir_bloque(nombre, lista):
+        if lista:
+            print(f"\n--- {nombre} ---")
+            for t in lista:
+                vence = t["fecha_vencimiento"] or "-"
+                print(
+                    f"ID: {t['id']} | P:{t['prioridad']} | "
+                    f"Estado: {t['estado']} | Vence: {vence} | {t['titulo']}"
+                )
+
+    imprimir_bloque("TAREAS VENCIDAS", vencidas)
+    imprimir_bloque("TAREAS PARA HOY", hoy_lista)
+    imprimir_bloque("PENDIENTES (por prioridad)", pendientes)
+    imprimir_bloque("EN PROGRESO", en_progreso)
+    imprimir_bloque("OTRAS (hechas/canceladas)", otras)
+
+    print("\n(Enter para volver)")
+    input()
+
