@@ -1,6 +1,10 @@
-from input_utils import pedir_entero_rango
-from task_service import menu_tareas
+# menus.py
 
+from task_service import menu_tareas
+from habit_service import menu_habitos
+from filter_service import menu_filtros
+from stats_service import menu_estadisticas
+from log_service import menu_log
 
 def menu_principal(state: dict):
     while True:
@@ -12,19 +16,20 @@ def menu_principal(state: dict):
         print("5. Registro de sesión")
         print("6. Salir")
 
-        opcion = pedir_entero_rango("Selecciona una opción (1-6): ", 1, 6)
+        opcion = input("Selecciona una opción (1-6): ").strip()
 
-        if opcion == 1:
+        if opcion == "1":
             menu_tareas(state)
-
-        elif opcion == 2:
-            print("Gestión de hábitos (pendiente implementar)")
-        elif opcion == 3:
-            print("Búsqueda y filtros (pendiente implementar)")
-        elif opcion == 4:
-            print("Estadísticas (pendiente implementar)")
-        elif opcion == 5:
-            print("Registro de sesión (pendiente implementar)")
-        elif opcion == 6:
-            print("\n⚠️ Los datos no se guardan. Al salir se perderá todo.")
-            break
+        elif opcion == "2":
+            menu_habitos(state)
+        elif opcion == "3":
+            menu_filtros(state)
+        elif opcion == "4":
+            menu_estadisticas(state)
+        elif opcion == "5":
+            menu_log(state)
+        elif opcion == "6":
+            print("Saliendo...")
+            return
+        else:
+            print("❌ Opción no válida.")
